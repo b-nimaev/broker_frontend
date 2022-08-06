@@ -1,58 +1,103 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+    <!-- <h2 class="text-center">{{ msg }}</h2> -->
+    <div class="container">
+      <div class="row">
+        <div class="box col-md-6 m-auto" :class="{ disabled: disabled }">
+          <form @submit.prevent="login">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label">Логин</label>
+              <input
+                type="text"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                v-model="username"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="exampleInputPassword1" class="form-label"
+                >Пароль</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                v-model="password"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Войти</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
+  data() {
+    return {
+      username: "",
+      password: "",
+      disabled: false
+    };
+  },
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  methods: {
+    login: async function () {
+      this.disabled = true
+      await this.$axios({
+        method: "post",
+        url: "https://localhost:8443/user/auth",
+        data: {
+          username: this.username,
+          password: this.password,
+        },
+      }).then((response) => {
+
+        if (!response.data) {
+          this.username = null
+          this.password = null
+          this.disabled = false
+
+          return false;
+        }
+
+        this.$router.push("dashboard")
+
+      });
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
+<style lang="scss" scoped>
+.hello {
+  text-align: left;
 }
-ul {
-  list-style-type: none;
-  padding: 0;
+
+.box {
+  padding: 30px;
 }
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+
+.disabled {
+  z-index: -1;
+  position: relative;
+  &:after {
+    content: '';
+    height: 100%;
+    width: 100%;
+    background: #eeeeee50;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 12px;
+  }
 }
 </style>
