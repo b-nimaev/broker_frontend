@@ -19,7 +19,11 @@
         </div>
         <div class="col-md-9">
           <main>
-            <router-view></router-view>
+            <router-view v-slot="{ Component }">
+              <transition name="fade">
+                <component :is="Component" />
+              </transition>
+            </router-view>
           </main>
         </div>
       </div>
@@ -39,6 +43,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.wrapper {
+  position: absolute;
+  top: 0;
+  transition: 2s ease;
+  width: 100%;
+  padding: 30px;
+  background: #44444417;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 6px 6px 0px 1px #721ebf1c;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
 .dashboard {
   text-align: left;
 }
@@ -47,10 +73,10 @@ img {
 }
 
 hr {
-    border-color: #fff;
+  border-color: #fff;
 }
 h2 {
-    color: #fff;
+  color: #fff;
 }
 
 ul {
@@ -70,12 +96,10 @@ ul {
 }
 
 main {
-  background: #44444417;
-  border-radius: 12px;
   width: 100%;
-  min-height: 600px px;
-  padding: 30px;
-  box-shadow: 6px 6px 0px 1px #721ebf1c;
   color: #fff;
+  position: relative;
+  min-height: 200px;
 }
+
 </style>
