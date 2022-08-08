@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import DashboardView from '../views/DashboardView.vue'
 import SettingsView from '../views/SettingsView.vue'
+import PageNotFound from '@/views/PathNotFound.vue'
+
 const routes = [
   {
     path: '/',
@@ -28,6 +30,9 @@ const routes = [
         component: import('../views/DepositsView.vue')
       }
     ]
+  },
+  {
+    path: '/:pathMatch(.*)*', component: PageNotFound
   }
 ]
 
